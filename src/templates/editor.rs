@@ -92,7 +92,11 @@ fn line(line: &[char], line_number: usize, current_line: usize, current_column: 
 }
 
 fn character(c: char, is_cursor: bool) -> Markup {
-    html! {
-        span .current_cursor[is_cursor] { (c) }
+    if is_cursor {
+        html! {
+            span .current_cursor[is_cursor] { (c) }
+        }
+    } else {
+        html! { (c) }
     }
 }
