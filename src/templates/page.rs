@@ -33,9 +33,9 @@ pub fn page(inner: Markup) -> Markup {
                         display: block;
                     }
                     body {
-                        background-color: #111111;
+                        background-color: #080808;
                         color: #eeeeee;
-                        line-height: 1;
+                        line-height: 0.93em;
                     }
                     ol, ul {
                         list-style: none;
