@@ -17,31 +17,10 @@ async fn main() {
 
 async fn root(State(editor): State<Arc<RwLock<Editor>>>) -> Markup {
     let editor = editor.read().await;
-    let lines = editor.lines();
-
-    let (current_line, current_column) = editor.cursor;
 
     templates::page::page(html! {
         div style="padding: 0.6em; display: flex; flex-direction: column; align-items: center;" {
-            div style="height: calc(1em * 26); background-color: #000000; white-space: pre-wrap; font-family: monospace; display: flex;" {
-                div style="width: calc(0.6em * 80); display: flex; flex-direction: column;" {
-                    @for (line_number, line) in lines.iter().enumerate() {
-                        div style=(if line_number == current_line { "background-color: #202020;" } else { "" }) {
-                            @for (column_number, c) in line.iter().enumerate() {
-                                span style=(
-                                    if line_number==current_line && column_number == current_column {
-                                        "border-left: 1px solid #eeeeee"
-                                    } else if line_number==current_line && column_number == line.len() - 1 && current_column >= line.len() {
-                                        "border-right: 1px solid #eeeeee"
-                                    } else {
-                                        ""
-                                    }
-                                ) { (c) }
-                            }
-                        }
-                    }
-                }
-            }
+            (templates::editor::editor(&editor))
         }
     })
 }
