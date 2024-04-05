@@ -56,6 +56,7 @@ pub fn page(inner: Markup) -> Markup {
                 }
             }
             body {
+                script src="https://unpkg.com/htmx.org@1.5.0/dist/htmx.js" {}
                 (inner)
             }
         }
