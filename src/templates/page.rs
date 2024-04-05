@@ -4,7 +4,7 @@ pub fn page(inner: Markup) -> Markup {
     html! {
         html {
             head {
-                title { "Editor" }
+                title { "HTMX Text Editor" }
                 style {
                     r#"
                     html, body, div, span, applet, object, iframe,
