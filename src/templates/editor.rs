@@ -10,7 +10,10 @@ pub fn editor(editor: &Editor) -> Markup {
     html! {
         style {
             r#"
-            .cursor {
+            .current_line {
+                background-color: #202020;
+            }
+            .current_cursor {
                 border-left: 1px solid #ffffff;
             }
             "#
@@ -27,12 +30,12 @@ pub fn editor(editor: &Editor) -> Markup {
 
 fn line(line: &[char], line_number: usize, current_line: usize, current_column: usize) -> Markup {
     html! {
-        div style=(if line_number == current_line { "background-color: #202020;" } else { "" }) {
+        div .current_line[line_number == current_line] {
             @for (column_number, c) in line.iter().enumerate() {
                 (character(*c, line_number == current_line && column_number == current_column))
             }
             (if line_number == current_line && current_column >= line.len() {
-                html!{span .cursor {}}
+                html!{span .current_cursor {}}
             } else {
                 html!{}
             })
@@ -42,6 +45,6 @@ fn line(line: &[char], line_number: usize, current_line: usize, current_column: 
 
 fn character(c: char, is_cursor: bool) -> Markup {
     html! {
-        span .cursor[is_cursor] { (c) }
+        span .current_cursor[is_cursor] { (c) }
     }
 }
