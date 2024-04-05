@@ -36,7 +36,7 @@ struct KeyboardTypeParams {
     is_shift: bool,
     #[serde(default)]
     is_alt: bool,
-    c: char,
+    key: String,
 }
 
 async fn keyboard_type(
@@ -45,15 +45,18 @@ async fn keyboard_type(
         is_ctrl,
         is_shift,
         is_alt,
-        c,
+        key,
     }): Query<KeyboardTypeParams>,
 ) -> Markup {
     let mut editor = editor.write().await;
 
-    if !is_ctrl && !is_shift && !is_alt {
-        editor.character_create(c);
-    } else if !is_ctrl && is_shift && !is_alt {
-        editor.character_create(c.to_ascii_uppercase());
+    if key.len() == 1 {
+        let c = key.chars().next().unwrap();
+        if !is_ctrl && !is_shift && !is_alt {
+            editor.character_create(c);
+        } else if !is_ctrl && is_shift && !is_alt {
+            editor.character_create(c.to_ascii_uppercase());
+        }
     }
 
     templates::editor::editor_template(&editor)

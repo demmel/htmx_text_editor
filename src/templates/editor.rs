@@ -1,4 +1,4 @@
-use maud::{html, Markup};
+use maud::{html, Markup, PreEscaped};
 
 use crate::Editor;
 
@@ -29,7 +29,28 @@ pub fn editor_page(editor: &Editor) -> Markup {
                     (editor_template(editor))
                 }
             }
-            (keyboard())
+            script type="text/javascript" {
+                (PreEscaped(r#"
+                    htmx.on("keydown", function(event) {
+                        const is_ctrl = !!event.ctrlKey;
+                        const is_shift = !!event.shiftKey;
+                        const is_alt = !!event.altKey;
+                        const key = event.key;
+
+                        if (key.length == 1) {
+                            htmx.ajax(
+                                "POST", 
+                                `/keyboard/type?key=${key}&is_ctrl=${is_ctrl}&is_shift=${is_shift}&is_alt=${is_alt}`, 
+                                {
+                                    target: ".editor",
+                                    swap: "outerHTML",
+                                }
+                            );
+                            event.preventDefault();
+                        } else {}
+                    });
+                "#))
+            }
             a href="https://github.com/demmel/htmx_text_editor" style="margin-top: 1em;"{
                 "Github"
             }
@@ -73,34 +94,5 @@ fn line(line: &[char], line_number: usize, current_line: usize, current_column: 
 fn character(c: char, is_cursor: bool) -> Markup {
     html! {
         span .current_cursor[is_cursor] { (c) }
-    }
-}
-
-fn keyboard() -> Markup {
-    html! {
-        @for c in '!'..='~' {
-            @for is_ctrl in [false, true] {
-                @for is_shift in [false, true] {
-                    @for is_alt in [false, true] {
-                        (key(c, is_ctrl, is_shift, is_alt))
-                    }
-                }
-            }
-        }
-    }
-}
-
-fn key(c: char, is_ctrl: bool, is_shift: bool, is_alt: bool) -> Markup {
-    let ctrl_key = format!("{}ctrlKey", if is_ctrl { "" } else { "!" });
-    let shift_key = format!("{}shiftKey", if is_shift { "" } else { "!" });
-    let alt_key = format!("{}altKey", if is_alt { "" } else { "!" });
-
-    html! {
-        div
-            style="display: none"
-            hx-target=".editor"
-            hx-swap="outerHTML"
-            hx-post=(format!("/keyboard/type?c={c}&&is_ctrl={is_ctrl}&&is_shift={is_shift}&&is_alt={is_alt}"))
-            hx-trigger=(format!("keydown[{ctrl_key}&&{shift_key}&&{alt_key}&&key=='{c}'] from:body")) {}
     }
 }
