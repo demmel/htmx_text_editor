@@ -4,31 +4,35 @@ use crate::Editor;
 
 pub fn editor_page(editor: &Editor) -> Markup {
     html! {
-        div {
-            style {
-                r#"
-                .current_line {
-                    background-color: #202020;
-                }
-
-                .current_cursor {
-                    animation: blinker 1s linear infinite;
-                    border-left: 1px solid #ffffff;
-                }
-
-                @keyframes blinker {
-                    50% {
-                        opacity: 0;
-                    }
-                }
-                "#
+        style {
+            r#"
+            .current_line {
+                background-color: #202020;
             }
-            div style="height: calc(1em * 26); background-color: #000000; white-space: pre-wrap; font-family: monospace; display: flex;" {
+
+            .current_cursor {
+                animation: blinker 1s linear infinite;
+                border-left: 1px solid #ffffff;
+            }
+
+            @keyframes blinker {
+                50% {
+                    opacity: 0;
+                }
+            }
+            "#
+        }
+        div style="padding: 1em; display: flex; flex-direction: column; align-items: center;" {
+            h1 {"The HTMX text editor no one asked for."}
+            div style="margin-top: 1em; height: calc(1em * 26); background-color: #000000; white-space: pre-wrap; font-family: monospace; display: flex;" {
                 div style="width: calc(0.552em * 80); display: flex; flex-direction: column;" {
                     (editor_template(editor))
                 }
             }
             (keyboard())
+            a href="https://github.com/demmel/htmx_text_editor" style="margin-top: 1em;"{
+                "Github"
+            }
         }
     }
 }

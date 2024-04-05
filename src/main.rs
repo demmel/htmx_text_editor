@@ -7,7 +7,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use maud::{html, Markup};
+use maud::Markup;
 use tokio::{net::TcpListener, sync::RwLock};
 
 type EditorState = Arc<RwLock<Editor>>;
@@ -25,11 +25,7 @@ async fn main() {
 async fn root(State(editor): State<EditorState>) -> Markup {
     let editor = editor.read().await;
 
-    templates::page::page(html! {
-        div style="padding: 0.6em; display: flex; flex-direction: column; align-items: center;" {
-            (templates::editor::editor_page(&editor))
-        }
-    })
+    templates::page::page(templates::editor::editor_page(&editor))
 }
 
 #[derive(serde::Deserialize)]
