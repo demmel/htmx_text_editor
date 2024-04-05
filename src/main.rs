@@ -71,8 +71,8 @@ struct Editor {
 impl Editor {
     fn new() -> Self {
         Self {
-            lines: vec![vec!['H', 'e', 'l', 'l', 'o'], vec!['W', 'o', 'r', 'l', 'd']],
-            cursor: (1, 5),
+            lines: vec![vec![]],
+            cursor: (0, 0),
         }
     }
 
